@@ -1,0 +1,102 @@
+DATE: 05-09-2023
+MAVEN:
+its a build too1.
+main file is POM.XML (project object model & Extensible markup language)
+POM.XML will have entire information of project.
+it is used to create artifact (war, jar, ear)
+It is mostly used for java-based projects.
+It was initially released on 13 July 2004.
+Maven is written in java (1.8.0)
+
+RAW: .java  (we cant use it)
+.java -- > compile -- > .class -- > .jar -- > package -- > .war
+
+.class 	: which can be executable
+.jar    : group of .class files (works for backend)
+.war	: it has frontend and backend code (FE: HTML, CSS, JS & BE: JAVA)
+libs	: its a pre defined packages used for code.
+
+ARTIFACTS: its the final product.
+JAR = JAVA ARCHIVE
+WAR = WEB ARCHIVE 
+EAR = ENTERPRISE ARCHIVE
+
+ARCHITECTURE:
+
+SETUP: CREATE EC2
+yum install git java-1.8.0-openjdk maven tree -y
+git clone https://github.com/devopsbyraham/jenkins-java-project.git
+cd jenkins-java-project.git
+
+PLUGIN: its a small software which automates our work.
+with the plugins we can use tools without installing them.
+
+GOAL: its a command used to perfrom task.
+MAVEN follows a lifecycle
+
+mvn compile	: to compile the source code
+mvn test	: to test the code
+mvn package	: to create artifact (project directory)
+mvn install	: to create artifact (maven home dir .m2)
+mvn clean packge: to perform entire goals 
+mvn clean	: to delete target
+
+
+maven			ant
+pom.xml			build.xml
+life cycle		no life cycle
+procedural		declareative
+plugins			no plugins
+no scripts 		scripts
+
+WHAT IF BUILD FAILS:
+1. CHECK JAVA VERSION FOR MAVEN
+2. CHECK POM.XML
+3. CHECK THE CODE
+
+    
+    HISTORY:
+    1  yum install git java-1.8.0-openjdk  maven -y
+    2  git clone https://github.com/devopsbyraham/jenkins-java-project.git
+    3  ll
+    4  cd jenkins-java-project/
+    5  ll
+    6  vim pom.xml
+    7  yum install tree -y
+    8  tree
+    9  mvn compile
+   10  tree
+   11  ls
+   12  mvn test
+   13  tree
+   14  mvn package
+   15  tree
+   16  mvn install
+   17  cd /root/.m2/repository/in/RAHAM/NETFLIX/1.2.2/
+   18  ll
+   19  cd -
+   20  ll
+   21  mvn clean package
+   22  mvn clean
+   23  ll
+   24  mvn clean package
+   25  ll
+   26  tree
+   27  ll
+   28  cd
+   29  mvn clean
+   30  ll
+   31  cd jenkins-java-project/
+   32  ll
+   33  mvn clean
+   34  ll
+   35  mvn -version
+   36  yum remove maven* -y
+   37  yum install maven -y
+   38  mvn -version
+   39  yum
+   40  yum remove maven* java* -y
+   41  yum install maven -y
+   42  mvn -version
+   43  mvn compile
+   44  history
