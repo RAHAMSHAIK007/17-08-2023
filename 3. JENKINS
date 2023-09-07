@@ -66,3 +66,73 @@ Source Code Management -- > GIT -- > https://github.com/devopsbyraham/jenkins-ja
 Build Steps -- > add setp -- > Execute shell -- > save
 
 ================================================================================================================================================
+07-09-2023:
+
+
+
+PARAMETERS: used to pass input for the jobs
+choice: when we have multiple options we can select one
+
+create a ci job -- > Configure -- > This project is parameterized -- > choice -- > name: env choice: dev,test,uat, prod -- > save
+
+string: to pass multiple inputs 
+multi line string: to pass input on multiple lines
+bool: ture of false
+file: to build files
+
+
+PORT CHANGING:
+vim /usr/lib/systemd/system/jenkins.service
+67 (8080=8090)
+systemctl daemon-reload
+systemctl restart jenkins.service
+systemctl status jenkins.service
+
+
+PASSWORDLESS LOGIN:
+vim /var/lib/jenkins/config.xml
+line 7 (true=false)
+systemctl restart jenkins.service
+systemctl status jenkins.service
+
+
+CHANGING BUILD LIMITS:
+dashboard -- > manage jenkins -- > nodes -- > built-in node -- > configure -- > number of executors -- > 3 -- > save
+
+
+HOW TO RESLOVE ISSUE WHEN JENKINS SERVER IS CRASHED: 
+when we stop and start server your ip will change and the services inside server also stop.
+
+
+
+RESTORING DELETE JOBS:
+
+Dashboard -- > Manage Jenkins -- > Plugins -- > available plugins -- > Job Configuration History -- > install -- > go back to top page
+
+now try to delete a job
+
+HISTORY:
+31  vim jenkins.sh
+   32  sh jenkins.sh 
+   33  cat /var/lib/jenkins/secrets/initialAdminPassword
+   34  cd /var/lib/jenkins/workspace/netflix/
+   35  ll
+   36  ls target/
+   37  vim /usr/lib/systemd/system/jenkins.service 
+   38  system daemon-reload
+   39  systemctl daemon-reload
+   40  systemctl restart jenkins.service 
+   41  systemctl status jenkins.service 
+   42  vim /usr/lib/systemd/system/jenkins.service 
+   43  systemctl daemon-reload
+   44  systemctl restart jenkins.service 
+   45  systemctl status jenkins.service 
+   46  vim /var/lib/jenkins/config.xml 
+   47  systemctl restart jenkins.service 
+   48  systemctl status jenkins.service 
+   49  systemctl restart jenkins.service 
+   50  systemctl status jenkins.service 
+   51  vim /var/lib/jenkins/config.xml 
+   52  systemctl restart jenkins.service 
+   53  systemctl status jenkins.service 
+   54  history
