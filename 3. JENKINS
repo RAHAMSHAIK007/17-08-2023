@@ -136,3 +136,55 @@ HISTORY:
    52  systemctl restart jenkins.service 
    53  systemctl status jenkins.service 
    54  history
+=================================================================
+
+CRONJOB: used to schedule the works on jenkins.
+cron synatx is used to work with cron jobs.
+cron synatx: * * * * *
+each star will have space in b/w
+NOTE: use server time (utc)
+
+*	: minutes
+*	: hours
+*	: date
+*	: month
+*	: day (0=sun 1=mon ----)
+
+11:05 08-09-2023
+
+5 11 8 9 5
+5 11 8 9 5
+
+4:45 pm 09-09-2023
+
+45 16 9 9 6
+
+38 5 8 9 5
+
+CREATE A CI JOB: Build Triggers -- > Build periodically -- > * * * * * -- > save
+
+Limitations:
+will not check the code is changed or not.
+
+POLLSCM: it will build when code is changed only.
+Note: need to set the time limit.
+
+CREATE A CI JOB: Build Triggers -- > Poll Scm -- > * * * * * -- > save
+
+
+limitation:
+9am -- > 7 am : time waste 
+
+Webhooks: it will trigger the build the moment we commit the code
+
+github -- > repo -- > settings -- > webhooks -- > add webhook -- >
+Payload URL: http://13.39.14.187:8080/github-webhook/ -- > Content type: application/json -- > Add webhook
+
+Jenkins Dashboard -- > create ci job -- > Build triggers -- > GitHub hook trigger for  GITScm polling -- > save  
+
+
+THROTTLE BUILD: to restrict number of builds per interval.
+create job -- > Throttle builds -- > Number of build: 3 -- > time period: hours -- > save 
+
+make builds and test them
+
