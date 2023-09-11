@@ -229,3 +229,236 @@ types:
 
 create a job2
 job1 -- > configuration -- > post build actions -- > build other projects -- > name of job2 -- > save
+
+=========================================================================
+PIPELINE: 
+stpe by step execution of particular process
+series of events interlinekd with each other
+pipelines are sytnax-based
+we use groovy language to write pipleine.
+its a DSL (domain specific language)
+it gives the vizualization of a process execution.
+
+
+CODE -- > BUILD -- > TEST -- > ARTIFACT -- > DEPLOY
+
+TYPES:
+1. SCRIPTED 
+2. DECLARATIVE
+
+DECLARATIVE PIPELINE:
+
+SINGLE STAGE:
+
+pipeline {
+    agent any
+    
+    stages{
+        stage('abc') {
+            steps {
+                sh 'touch file2'
+            }
+        }
+    }
+}
+
+MULTI STAGE:
+
+pipeline {
+    agent any
+    
+    stages{
+        stage('abc') {
+            steps {
+                sh 'touch file1'
+            }
+        }
+	 stage('abc') {
+            steps {
+                sh 'touch file2'
+            }
+        }
+    }
+}
+
+NOTE: PASSS 
+P : PIPELINE
+A : AGNET
+S : STAGES
+S : STAGE
+S : STEPS
+
+
+CI PIPELINE:
+
+pipeline {
+    agent any 
+    
+    stages{
+        stage('checkout') {
+            steps {
+                git 'https://github.com/devopsbyraham/jenkins-java-project.git'
+            }
+        }
+        stage('build') {
+            steps {
+                sh 'mvn compile'
+            }
+        }
+        stage('test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+        stage('artifact') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+    }
+}
+
+
+PIPELINE AS A CODE:
+executing multiple commands or multiple actions on a single stage.
+
+pipeline {
+    agent any
+    
+    stages {
+        stage('one') {
+            steps {
+                git 'https://github.com/devopsbyraham/jenkins-java-project.git'
+                sh 'mvn compile'
+                sh 'mvn test'
+                sh 'mvn clean package'
+            }
+        }
+    }
+}
+
+PIPELINE AS A CODE OVER MULTI STAGE:
+executing multiple commands or multiple actions on a multiple stage.
+
+
+pipeline {
+    agent any
+    
+    stages {
+        stage('one') {
+            steps {
+                git 'https://github.com/devopsbyraham/jenkins-java-project.git'
+                sh 'mvn compile'
+            }
+        }
+        stage('two') {
+            steps {
+                sh 'mvn test'
+                sh 'mvn clean package'
+            }
+        }
+    }
+}
+
+PIPELINE AS A CODE OVER SINGLE-SHELL:
+executing multiple commands over a single shell.
+
+
+pipeline {
+    agent any
+    
+    stages {
+        stage('one') {
+            steps {
+                git 'https://github.com/devopsbyraham/jenkins-java-project.git'
+                sh '''
+                mvn compile
+                mvn test
+                mvn package
+                mvn install
+                mvn clean package
+                '''
+            }
+        }
+    }
+}
+
+
+
+SONARQUBE:
+its a tool used to check the code quality.
+it covers the bugs, vulnerabilities, code duplications, code smells.
+its supports 20+ programming langauges.
+we have both free and paid version.
+
+port: 9000
+req: t2 medium
+dependency: java-11
+
+SETUP:
+
+#! /bin/bash
+#Launch an instance with 9000 and t2.medium
+cd /opt/
+wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.9.6.50800.zip
+unzip sonarqube-8.9.6.50800.zip
+amazon-linux-extras install java-openjdk11 -y
+useradd sonar
+chown sonar:sonar sonarqube-8.9.6.50800 -R
+chmod 777 sonarqube-8.9.6.50800 -R
+su - sonar
+
+#run this on server manually
+#sh /opt/sonarqube-8.9.6.50800/bin/linux/sonar.sh start
+#echo "user=admin & password=admin"
+
+after login -- > add project -- > manual -- > project key -- > netlfix -- > setup -- > token -- > netflix -- > generate -- > continue -- > maven 
+
+copy paste the code on pipeline:
+
+pipeline {
+    agent any 
+    
+    stages{
+        stage('checkout') {
+            steps {
+                git 'https://github.com/devopsbyraham/jenkins-java-project.git'
+            }
+        }
+        stage('build') {
+            steps {
+                sh 'mvn compile'
+            }
+        }
+        stage('test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+        stage('code quality') {
+            steps {
+                sh '''
+                mvn sonar:sonar \
+                  -Dsonar.projectKey=netflix \
+                  -Dsonar.host.url=http://13.38.32.159:9000 \
+                  -Dsonar.login=3f017506d83cd334fba02ecf9db706c429ab5d38
+                '''
+            }
+        }
+        stage('artifact') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+    }
+}
+
+TO EXCECUTE ON SLAVE
+
+pipeline {
+    agent {
+        label 'slave1'
+    } 
+    
+
+
