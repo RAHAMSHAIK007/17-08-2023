@@ -460,5 +460,94 @@ pipeline {
         label 'slave1'
     } 
     
+===================================================================================
+12-09-2023:
+
+VARIABLES:
+assigning the value 
+
+a=10
+name=raham
+
+1. USER DEFINED VARIABLES:
+a. local vars: we can define inside job
+2. global vars: we can define outside jobs
+
+2. JENKINS ENV VARS:
+their vars are going to change as per build.
+
+HOW TO PASS VARIABLES ON PIPELINE:
+
+
+pipeline {
+    agent any 
+    
+    environment {
+        name = "raham"
+        loc = "hyderabad"
+    }
+    stages {
+        stage('one') {
+            steps {
+                echo "hai all my name is $name and im from $loc"
+                sh 'env'
+            }
+        }
+    }
+}
+
+=====================================================================
+
+POST BUILD ACTIONS:
+actions the we perform after the build is called as post build action.
+
+always: if build failed or success it will run the post actions.
+success: it will execute post actions only when the build is successful.
+failure: it will execute post actions only when the build is failed.
+
+pipeline {
+    agent any 
+    
+    environment {
+        name = "raham"
+        loc = "hyderabad"
+    }
+    stages {
+        stage('one') {
+            steps {
+                s 'env'
+            }
+        }
+    }
+    post {
+        always {
+            echo "the build is done"
+        }
+    }
+}
+
+===============================================================================================
+
+RBAC: ROLE BASE ACCESS CONTROL
+
+in real time to restrict the access for jenkins console we use rbac.
+with rbac we can give set of limited permissions for user.
+
+1. user:
+dashboard -- > manage jenkins -- > users -- > create user (ramesh, suresh)
+
+2. Plugin: 
+Dashboard -- > Manage Jenkins -- >Plugins -- >available plugin  -- >Role-based Authorization Strategy -- >install
+
+3. configure:
+Dashboard -- > Manage Jenkins -- >security -- > security -- > Authorization -- > Role-based Authorization -- > save
+
+4. manage and assign roles
+
+Dashboard -- > Manage Jenkins -- >Manage and Assign Roles -- > Manage Role
+role1: fresher -- > read
+role2: exp -- > admin
+
+ASSIGN ROLES
 
 
