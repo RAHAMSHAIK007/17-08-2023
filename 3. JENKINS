@@ -550,4 +550,53 @@ role2: exp -- > admin
 
 ASSIGN ROLES
 
+--------------------------------------------------------------
+
+TOMCAT SETUP:
+1. wget http://dlcdn.apache.org/tomcat/tomcat-9/v9.0.80/bin/apache-tomcat-9.0.80.tar.gz
+2. tar -zxvf apache-tomcat-9.0.80.tar.gz
+3. vim apache-tomcat-9.0.80/conf/tomcat-users.xml
+
+  <role rolename="manager-gui"/>
+  <role rolename="manager-script"/>
+  <user username="tomcat" password="raham123" roles="manager-gui, manager-script"/>
+
+4. vim apache-tomcat-9.0.80/webapps/manager/META-INF/context.xml (delete 21,22)
+5. sh apache-tomcat-9.0.80/bin/startup.sh
+
+public-ip slave:8080
+manager app -- > usrername and passowd
+
+Download pluguin -- > Deploy to container : this is to deploy on tomcat
+
+
+Dashboard
+Manage Jenkins
+Credentials
+System
+Global credentials (unrestricted)
+add credentials -- > username and password -- > save
+
+http://13.39.49.204:8080/netflix/
+
+TROUBLESHOOTING TECHNIQUES:
+1. SERVER LEVEL
+2. JOB LEVEL
+3. CODE LEVEL
+
+1. SERVER LEVEL:
+A. CONSOLE OP
+B. MAVEN & JAVA
+C. DEPENDENCY MISTAKE 
+D. CPU & MEMEORY
+
+2. JOB LEVEL:
+A. REPO AND BRANCH CONFIG
+B. SYNTAX
+C. PLUGINS
+
+
+vim /root/apache-tomcat-9.0.80/conf/server.xml
+sh /root/apache-tomcat-9.0.80/bin/startup.sh
+sh /root/apache-tomcat-9.0.80/bin/shutdown.sh
 
