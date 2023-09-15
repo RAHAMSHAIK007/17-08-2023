@@ -113,3 +113,151 @@ HISTORY:
    20  2023-09-14 06:37:05 history
 
 =============================================================================================
+
+ANSIBLE MODULES:
+modules work on key-value pair.
+modules used to do the work which we want.
+depend on the work module changes.
+
+NAME: RAHAM
+COURSE: DEVOPS
+FEE: 8k
+
+color pattren:
+
+YELLOW	: SUCCESSFUL
+RED	: FAILED
+GREEN	: ALREADY DONE
+BLUE	: SKIPPED
+
+ansible all -a "yum install git -y"
+ansible all -m yum -a "name=git state=present"
+ansible all -m yum -a "name=docker state=present"  (present=install)
+ansible all -m yum -a "name=docker state=present"  (absent=uninstall)
+ansible all -m yum -a "name=docker state=latest"   (latest=update)
+ansible all -m service -a "name=httpd state=started"
+ansible all -m service -a "name=httpd state=stopped"
+ansible all -m user -a "name=rajinikanth state=present"
+ansible all -m user -a "name=rajinikanth state=absent"
+ansible all -m copy -a "src=app.yml dest=/root"
+ansible all -a "ls /root"
+
+PLAYBOOKS:
+playbook is a collection of modules.
+we can execute multiple modules at same time.
+we can reuse the playbook.
+playbook will be written on YAML language.
+YAML: YET ANOTHER MARKUP LANGUAGE
+its a human readable and serial langauge.
+yaml is syntax-based.
+yaml start with --- and end with ...
+we write it on list format.
+extension is .yml or .yaml
+
+PLAYBOOK1:
+
+vim raham.yml
+
+
+---
+- hosts: all
+  tasks:
+    - name: install httpd
+      yum: name=httpd state=present
+
+    - name: start httpd
+      service: name=httpd state=started
+
+    - name: create user
+      user: name=revi state=present
+...
+
+
+ansible-playbook raham.yml
+
+
+- hosts: all
+  tasks:
+    - name: remove httpd
+      yum: name=httpd state=absent
+
+    - name: stop httpd
+      service: name=httpd state=stopped
+
+    - name: remove user
+      user: name=revi state=absent
+
+
+TAGS:
+used to execute or skip a specific task
+
+- hosts: all
+  tasks:
+    - name: install docker
+      yum: name=docker state=present
+      tags: a
+
+    - name: start docker
+      service: name=docker state=started
+      tags: b
+
+    - name: install maven
+      yum: name=maven state=present
+      tags: c
+
+    - name: create user
+      user: name=revi state=present
+      tags: d
+
+SINGLE TAG: ansible-playbook raham.yml --tags c
+MULTI TAGS: ansible-playbook raham.yml --tags a,b
+SKIP TAGS: ansible-playbook raham.yml --skip-tags "c"
+MULTI SKIP TAGS: SKIP TAGS: ansible-playbook raham.yml --skip-tags "b,c"
+
+
+
+HISTORY:
+ 43  ansible all -a "yum install git -y"
+   44  ansible all -a "yum install tree -y"
+   45  ansible all -a "yum remove git* tree* -y"
+   46  ansible all -m yum -a "name=git state=present"
+   47  ansible all -m yum -a "name=docker state=present"
+   48  ansible all -m yum -a "name=httpd state=present"
+   49  ansible all -m yum -a "name=httpd state=absent"
+   50  ansible all -m yum -a "name=httpd state=present"
+   51  ansible all -m yum -a "name=httpd state=latest"
+   52  ansible all -m yum -a "name=httpd state=started"
+   53  ansible all -m service -a "name=httpd state=started"
+   54  ansible all -a "systemctl status httpd"
+   55  ansible all -m service -a "name=httpd state=stopped"
+   56  ansible all -a "systemctl status httpd"
+   57  ansible all -m user -a "name=rajinikanth state=present"
+   58  ansible all -m user -a "name=rajinikanth state=absent"
+   59  vim app.yml
+   60  ll
+   61  ansible all -m copy -a "src=app.yml dest=/tmp"
+   62  ansible all -a "ls"
+   63  ansible all -a "ls /tmp"
+   64  ansible all -m copy -a "src=app.yml dest=/root"
+   65  ansible all -a "ls /tmp"
+   66  ansible all -a "ls /root"
+   67  rm -rf *
+   68  vim raham.yml
+   69  ansible all -a "yum remove httpd* -y"
+   70  ansible-playbook raham.yml
+   71  vim raham.yml
+   72  ansible-playbook raham.yml
+   73  vim raham.yml
+   74  cat raham.yml
+   75  ansible-playbook raham.yml --tags c
+   76  ansible all -a "yum remove maven* -y"
+   77  ansible-playbook raham.yml --tags c
+   78  cat raham.yml
+   79  ansible-playbook raham.yml --tags a,b
+   80  cat raham.yml
+   81  ansible all -a "yum remove docker* maven* -y"
+   82  cat raham.yml
+   83  ansible-playbook raham.yml --skip-tags "c"
+   84  ansible-playbook raham.yml --skip-tags "c,d"
+   85  history
+
