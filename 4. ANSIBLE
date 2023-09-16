@@ -261,3 +261,233 @@ HISTORY:
    84  ansible-playbook raham.yml --skip-tags "c,d"
    85  history
 
+=====================================================
+SHELL VS COMMAND VS RAW
+
+- hosts: all
+  tasks:
+    - name: install git
+      shell: yum install git -y
+
+    - name: install maven
+      command: yum install maven -y
+
+    - name: install docker
+      raw: yum install docker -y
+
+RAW >> COMMAND >> SHELL
+
+sed -i 's/install/remove/g' raham.yml
+
+- hosts: all
+  tasks:
+    - name: remove git
+      shell: yum remove git -y
+
+    - name: remove maven
+      command: yum remove maven -y
+
+    - name: remove docker
+      raw: yum remove docker -y
+
+ansible-playbook raham.yml
+
+VARS:
+
+STATIC VARS: vars which will define inside playbook.
+DYNAMIC VARS: vars which are not define inside playbook.
+
+- hosts: all
+  vars:
+    a: git
+    b: maven
+    c: docker
+  tasks:
+    - name: install git
+      yum: name={{a}} state=present
+
+    - name: install maven
+      yum: name={{b}} state=present
+
+    - name: install docker
+      yum: name={{c}} state=present
+
+
+ansible-playbook raham.yml
+
+- hosts: all
+  vars:
+    a: git*
+    b: maven
+    c: docker
+  tasks:
+    - name: install git*
+      yum: name={{a}} state=absent
+
+    - name: install maven
+      yum: name={{b}} state=absent
+
+    - name: install docker
+      yum: name={{c}} state=absent
+
+ansible-playbook raham.yml
+
+
+- hosts: all
+  vars:
+    a: git*
+    b: maven
+    c: docker
+  tasks:
+    - name: install git*
+      yum: name={{a}} state=present
+
+    - name: install maven
+      yum: name={{b}} state=present
+
+    - name: install docker
+      yum: name={{c}} state=present
+
+    - name: install pkg
+      yum: name={{d}} state=present
+
+ansible all -a "yum remove git* maven* docker* tree* -y"
+
+=====================
+
+- hosts: all
+  vars:
+    a: git
+    b: maven
+    c: docker
+  tasks:
+    - name: install git*
+      yum: name={{a}} state=present
+
+    - name: install maven
+      yum: name={{b}} state=present
+
+    - name: install docker
+      yum: name={{c}} state=present
+
+    - name: install {{d}}
+      yum: name={{d}} state=present
+
+    - name: install {{e}}
+      yum: name={{e}} state=present
+
+
+ single var: ansible-playbook raham.yml --extra-vars "d=tree"
+ multi var: ansible-playbook raham.yml --extra-vars "d=tree e=java-1.8.0-openjdk"
+
+sed -i "s/present/absent/g" raham.yml
+ multi var: ansible-playbook raham.yml --extra-vars "d=tree e=java-1.8.0-openjdk"
+
+LOOPS:
+
+- hosts: all
+  tasks:
+    - name: install pkgs
+      yum: name={{item}} state=present
+      with_items:
+        - git
+        - maven
+        - docker
+        - htppd
+        - tree
+
+
+- hosts: all
+  tasks:
+    - name: create users
+      user: name={{item}} state=present
+      with_items:
+        - jayanth
+        - delidemir
+        - ramesh
+        - kowshik
+        - revi
+        - manikanta
+        - sravanthi
+        - sarvani
+        - nikitha
+        - sadekaa
+
+
+TROUBLESHOOTING:
+ansible all -m setup | grep -i cpus
+ansible all -m setup | grep -i mem
+
+HISTORY:
+ 87  vim raham.yml
+   88  ansible-playbook raham.yml
+   89  cat raham.yml
+   90  sed -i 's/install/remove/g' raham.yml
+   91  cat raham.yml
+   92  ansible-playbook raham.yml
+   93  ansible all -a "docker --version"
+   94  ansible all -a "mvn --version"
+   95  ansible all -a "git --version"
+   96  ansible all -a "yum remove git* -y"
+   97  vim raham.yml
+   98  ansible-playbook raham.yml
+   99  cat raham.yml
+  100  sed -i 's/present/absent/g' raham.yml
+  101  cat raham.yml
+  102  sed -i 's/git/git*/g' raham.yml
+  103  ansible-playbook raham.yml
+  104  ansible all -a "git --version"
+  105  vim raham.yml
+  106  ansible-playbook raham.yml --extra-vars "d=tree"
+  107  vim raham.yml
+  108  ansible-playbook raham.yml --extra-vars "d=tree"
+  109  ansible all -a "tree --version"
+  110  vim raham.yml
+  111  ansible all -a "yum remove git* maven* docker* tree* -y"
+  112  ansible-playbook raham.yml --extra-vars "d=tree, e=java-1.8.0-openjdk"
+  113  ansible-playbook raham.yml --extra-vars "d=tree e=java-1.8.0-openjdk"
+  114  sed -i "s/present/absent/g" raham.yml
+  115  cat raham.yml
+  116  ansible-playbook raham.yml --extra-vars "d=tree, e=java-1.8.0-openjdk"
+  117  cat raham.yml
+  118  vim raham.yml
+  119  ansible-playbook raham.yml
+  120  vim  raham.yml
+  121  ansible-playbook raham.yml
+  122  ansible all -a "git --version"
+  123  ansible all -a "maven --version"
+  124  ansible all -a "mvn --version"
+  125  ansible all -a "docker --version"
+  126  ansible all -a "httpd --version"
+  127  ansible all -a "tree --version"
+  128  sed -i 's/present/absent/g' raham.yml
+  129  cat raham.yml
+  130  sed -i 's/git/git*/g' raham.yml
+  131  ansible-playbook raham.yml
+  132  vim raham.yml
+  133  ansible-playbook raham.yml
+  134  cat raham.yml
+  135  sed -i 's/present/absent/g' raham.yml
+  136  ansible-playbook raham.yml
+  137  cd .ssh
+  138  ll
+  139  cat known_hosts
+  140  ansible all --list-host
+  141  vim /etc/ansible/hosts
+  142  ansible all --list-host
+  143  vim /etc/ansible/hosts
+  144  ansible all --list-host
+  145  cat known_hosts
+  146  ll
+  147  vim /etc/ansible/hosts
+  148  ll
+  149  cd
+  150  ansible setup -m all
+  151  ansible all -m setup
+  152  ansible all -m setup | grep -i cpus
+  153  ansible all -m setup | grep -i memory
+  154  ansible all -m setup | grep -i mem
+  155  ansible all -m setup | grep -i cpus
+  156  ansible all -m setup | grep -i mem
+  157  history
+[root@ansible ~]#
