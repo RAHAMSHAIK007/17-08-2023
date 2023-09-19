@@ -490,4 +490,212 @@ HISTORY:
   155  ansible all -m setup | grep -i cpus
   156  ansible all -m setup | grep -i mem
   157  history
-[root@ansible ~]#
+=============================================================================================================
+
+HANDLERS: here one task depends on another task.
+when task-1 is executed it will call task-2 to perform the action.
+ex: if we want to restart httpd we need to install it
+restarting depends on installing.
+Note: here we have notify module.
+
+- hosts: all
+  tasks:
+    - name: installing apache on RedHat
+      yum: name=httpd state=present
+      notify: starting apache
+  handlers:
+    - name: starting apache
+      service: name=httpd state=started
+
+ansible all -a "systemctl status httpd"
+
+
+ANSIBLE VAULT:
+it is used to encrypt the files, playbooks ----
+Technique: AES256 (USED BY FACEBOOK)
+vault will store our data very safely and securely.
+if we want to access any data which is in the vault we need to give a password.
+Note: we can restrict the users to access the playbook aslo.
+
+ansible-vault create creds1.txt		: to create a vault
+ansible-vault edit creds1.txt		: to edit a vault
+ansible-vault rekey creds1.txt		: to change password for a vault
+ansible-vault decrypt creds1.txt	: to decrypt the content	
+ansible-vault encrypt creds1.txt	: to encrypt the content	
+ansible-vault view creds1.txt		: to show the content without decrypt
+	
+PIP: its a pkg manager used to install python libs/modules
+
+Redhat: yum
+ubuntu: apt
+python: pip
+
+
+
+- hosts: all
+  tasks:
+    - name: installing pip
+      yum: name=pip state=present
+
+    - name: installing NumPy
+      pip: name=Numpy state=present
+
+
+- hosts: all
+  tasks:
+    - name: installing pip
+      yum: name=pip state=present
+
+    - name: installing Pandas
+      pip: name=Pandas state=present
+
+
+ANSIBLE SETUP MODULES: Used to print the complete info of worker nodes.
+
+ROLES: 
+used to divide the playbook into directory structures.
+we can organize the playbooks.
+we can encapsulate the data.
+we can reduce the playbook length.
+
+mkdir playbooks
+cd playbooks
+yum install tree -y
+
+
+.
+├── master.yml
+└── roles
+    ├── file
+    │   └── tasks
+    │       └── main.yml
+    ├── one
+    │   └── tasks
+    │       └── main.yml
+    └── raham
+        └── tasks
+            └── main.yml
+
+
+mkdir -p roles/one/tasks
+vim roles/one/tasks/main.yml
+
+- name: installing maven
+  yum: name=maven state=present
+
+vim roles/raham/tasks/main.yml
+- name: create user
+  user: name=srikanth state=present
+
+vim roles/file/tasks/main.yml
+- name: create a file
+  shell: touch file22
+
+vim master.yml
+
+- hosts: all
+  roles:
+    - one
+    - raham
+    - file
+
+ansible-playbook master.yml
+
+ANSIBLE-GALAXY: used to store playbooks like code on github.
+
+ansible-galaxy search java
+ansible-galaxy install akhilesh9589.tomcat
+ansible-galaxy search --author alikins
+
+HISTORY:
+158  ll
+  159  vim raham.yml
+  160  ansible setup -m all
+  161  ansible all -m setup
+  162  vim raham.yml
+  163  cat raham.yml
+  164  ansible all -m setup
+  165  ansible all -m setup | grep -i family
+  166  cat raham.yml
+  167  ansible-playbook raham.yml
+  168  sed -i 's/present/absent/g' raham.yml
+  169  sed -i 's/git/git*/g' raham.yml
+  170  ansible-playbook raham.yml
+  171  vim raham.yml
+  172  ansible-playbook raham.yml
+  173  sed -i 's/present/absent/g' raham.yml
+  174  ansible-playbook raham.yml
+  175  vim raham.yml
+  176  cat raham.yml
+  177  ansible-playbook raham.yml
+  178  ansible all -a "systemctl status httpd"
+  179  sed -i 's/present/absent/g' raham.yml
+  180  ansible-playbook raham.yml
+  181  ll
+  182  vim creds.txt
+  183  cat creds.txt
+  184  ansible-vault create creds1.txt
+  185  cat creds.txt
+  186  cat creds1.txt
+  187  ansible-vault edit creds1.txt
+  188  cat creds1.txt
+  189  ansible-vault rekey creds1.txt
+  190  cat creds1.txt
+  191  ansible-vault decrypt creds1.txt
+  192  cat creds1.txt
+  193  ansible-vault encrypt creds1.txt
+  194  cat creds1.txt
+  195  ansible-vault view creds1.txt
+  196  cat creds1.txt
+  197  ll
+  198  cat raham.yml
+  199  ansible-vault encrypt raham.yml
+  200  cat raham.yml
+  201  ansible-playbook raham.yml
+  202  ansible-vault decrypt raham.yml
+  203  vim raham.yml
+  204  ansible-playbook raham.yml
+  205  vim raham.yml
+  206  ansible-playbook raham.yml --check
+  207  vim raham.yml
+  208  ansible-playbook raham.yml
+  209  vim raham.yml
+  210  rm -rf *
+  211  ll
+  212  mkdir playbooks
+  213  cd playbooks/
+  214  yum install tree -y
+  215  mkdir -p roles/one/tasks
+  216  vim roles/one/tasks/main.yml
+  217  vim master.yml
+  218  tree
+  219  cat master.yml
+  220  cat roles/one/tasks/main.yml
+  221  cat master.yml
+  222  ansible-playbook master.yml
+  223  tree
+  224  mkdir -p roles/raham/tasks
+  225  tree
+  226  vim roles/raham/tasks/main.yml
+  227  vim master.yml
+  228  ansible-playbook master.yml
+  229  tree
+  230  mkdir -p roles/file/tasks
+  231  vim roles/file/tasks/main.yml
+  232  vim master.yml
+  233  ansible-playbook master.yml
+  234  tree
+  235  cat roles/raham/tasks/main.yml
+  236  cat roles/file/tasks/main.yml
+  237  cd
+  238  rm -rf *
+  239  ansible-galaxy search java
+  240  ansible-galaxy search tomcat
+  241  ansible-galaxy install akhilesh9589.tomcat
+  242  cd .ansible/roles/akhilesh9589.tomcat/
+  243  ll
+  244  cd
+  245  ansible-galaxy search --author akhilesh9589
+  246  ansible-galaxy search --author alikins
+  247  history
+
