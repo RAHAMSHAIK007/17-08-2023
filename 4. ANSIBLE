@@ -699,3 +699,186 @@ HISTORY:
   246  ansible-galaxy search --author alikins
   247  history
 
+===============================================
+
+ansible_hostname
+ansible_memfree_mb
+ansible_memtotal_mb
+ansible_os_family
+ansible_pkg_mgr
+ansible_processor_vcpus
+
+
+Debug: used to print the msgs/customize ops
+
+- hosts: all
+  tasks:
+    - name: to pring mgs
+      debug:
+        msg: "the node name os: {{ansible_hostname}}, the total mem is: {{ansible_memtotal_mb}}, free mem is {{ansible_memfree_mb}}, the flavour of ec2 is: {{ansible_os_family}}, toto cpus is: {{ansible_processor_vcpus}}"
+
+JINJA2 TEMPLATE: used to get the customized op, here its a text file which can extract the variables and these values will change as per time.'
+
+LOOKUPS: this module used to get data from files, db and key-values
+
+
+- hosts: dev
+  vars:
+    a: "{{lookup('file', '/root/creds.txt') }}"
+  tasks:
+    - debug:
+        msg: "hai my user name is {{a}}"
+
+cat creds.txt
+user=raham
+
+STRATAGIES:
+
+LINEAR: execute tasks sequencially
+FREE: execute all tasks on all node at same time
+ROLLING:
+SEQUENC:
+BATCH:
+
+ hosts: dev
+  gather_facts: false
+  strategy: free
+  vars:
+    a: "{{lookup('file', '/root/creds.txt') }}"
+  tasks:
+    - debug:
+        msg: "hai my user name is {{a}}"
+
+=============================================================================
+
+LAMP:
+L : LINUX
+A : APACHE
+M : MYSQL
+P : PHP
+
+
+
+---
+- hosts: all
+  tasks:
+    - name: installing apache
+      yum: name=httpd state=present
+    - name: installing mysql
+      yum: name=mysql state=present
+    - name: installing python
+      yum: name=python3 state=present
+
+=============================================================================
+
+NETFLIX DEPLOPYMET:
+
+- hosts: test
+  tasks:
+    - name: installing apache server
+      yum: name=httpd state=present
+
+    - name: activating apache server
+      service: name=httpd state=started
+
+    - name: installing git
+      yum: name=git state=present
+
+    - name: git checkout
+      git:
+        repo: "https://github.com/CleverProgrammers/pwj-netflix-clone.git"
+        dest: "/var/www/html"
+
+TOMCAT SETUP:
+USE TOMCAT.YML, CONTEXT.XML AND TOMCAT-USER.XML FROM BELOW REPO
+https://github.com/RAHAMSHAIK007/all-setups.git
+
+CONDITIONS:
+CLUSTER: GROUP OF NODES/SERVERS
+
+HOMOGENIUS: SERVERS WITH SAME OS AND FLAVOUR
+HETEROGENEOUS: SERVERS WITH DIFFERENT OS AND FLAVOUR
+
+
+- hosts: all
+  tasks:
+    - name: installing git* on RedHat
+      yum: name=git* state=present
+      when: ansible_os_family == "RedHat"
+
+    - name: installing git* on Ubuntu
+      apt: name=git* state=present
+      when: ansible_os_family == "Debian"
+
+sed -i 's/present/absent/g' raham.yml
+
+EX-2:
+
+- hosts: all
+  tasks:
+    - name: installing apache on RedHat
+      yum: name=httpd state=present
+      when: ansible_os_family == "RedHat"
+
+    - name: installing apache on Ubuntu
+      apt: name=apache2 state=present
+      when: ansible_os_family == "Debian"
+
+sed -i 's/present/absent/g' raham.yml
+
+HISTORY:
+295  ansible-playbook playbook.yml --check
+  296  vim playbook.yml 
+  297  ansible-playbook playbook.yml 
+  298  cat playbook.yml 
+  299  sed -i 's/present/absent/g, s/install/unistall/g' playbook.yml 
+  300  sed -i 's/present/absent/g; s/install/unistall/g' playbook.yml 
+  301  ansible-playbook playbook.yml 
+  302  vim playbook.yml 
+  303  ansible-playbook playbook.yml 
+  304  ansible all -m setup
+  305  vim playbook.yml 
+  306  ansible-playbook playbook.yml 
+  307  vim playbook.yml 
+  308  vim raham/'
+  309  ll
+  310  rm -rf raham/ lucky/
+  311  ll
+  312  vim creds.txt
+  313  cat creds.txt 
+  314  vim playbook.yml 
+  315  cat playbook.yml 
+  316  cat creds.txt 
+  317  ansible-playbook playbook.yml 
+  318  vim playbook.yml 
+  319  ansible-playbook playbook.yml 
+  320  vim playbook.yml 
+  321  ansible-playbook playbook.yml 
+  322  vim playbook.yml 
+  323  ansible-playbook playbook.yml 
+  324  cat playbook.yml 
+  325  vim playbook.yml 
+  326  ansible-playbook playbook.yml 
+  327  sed -i 's/present/absent/g' playbook.yml 
+  328  sed -i 's/install/unistall/g' playbook.yml 
+  329  ansible-playbook playbook.yml 
+  330  vim netflix.yml
+  331  ansible-playbook playbook.yml 
+  332  vim netflic.yml
+  333  ansible-playbook netflix.yml 
+  334  vim playbook.yml 
+  335  vim netflix.yml 
+  336  ansible-playbook netflix.yml 
+  337  rm -rf *
+  338  vim tomcat.yml
+  339  sed -i 's/9.0.76/9.0.80/g' tomcat.yml 
+  340  vim tomcat.yml
+  341  vim tomcat-users.xml
+  342  vim context.xml
+  343  ll
+  344  cat tomcat.yml 
+  345  ansible-playbook tomcat.yml 
+  346  vim tomcat.yml 
+  347  ansible-playbook tomcat.yml 
+  348  history
+[root@ansible ~]# 
