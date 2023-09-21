@@ -1,0 +1,96 @@
+MONOLITHIC: SINGLE APP -- > SINGLE SERVER -- > SINGLE DATABASE
+MICRO SERVICES: SINGLE APP -- > MULTIPLE SERVERS -- > MULTIPLE DATABASES
+
+MICRO:
+COST WILL BE HIGH
+MAINTAINANCE
+
+
+LIMITATIONS OF MONLITHIC:
+1. SERVER PERFOMANCE
+
+
+CONTAINERS:
+SERVER = CONTAINER
+
+Containers will not have os by default.
+cant able to install pacakages
+cant able to deploy the app.
+
+images: inside the image we have os and packages
+
+image (os) -- > conatiner (app)
+
+VIRTUALIZATION: process of utilizing hardware resources in better.
+CONTAINERIZATION: process of packing application with its dependencies
+APP: PUBG DEPENDENCY: MAPS
+
+PUBG:
+APP: PLAYSTORE MAPS: INTERNET
+
+DOCKER:
+its a free and open-source platform.
+docker will create containers.
+we can create, run, and deploy our apps on containers.
+its platform independent (native runs on Linux Distribution).
+containers will use host resources (cpu, mem, ram, os)
+docker will perform os level of VIRTUALIZATION called containerization.
+
+year: 2013
+developed by: Solomen Hykes and Sebastian Phal
+language: go lang
+
+
+ARCHITECTURE:
+DOCKER CLIENT: its a way of interacting with docker (command -- > op)
+DOCKER DAEMON: it manage all the docker components (images, cont, volumes, nlw)
+DOCKER HOST: where we installed docker
+DOCKER REGISTRY: it manages all the  docker images on internet.
+
+
+INSTALLATION:
+yum install docker -y
+systemctl start docker
+systemctl status docker
+
+
+docker pull amazonlinux		: to downlaod image
+docker run -it --name cont1 amazonlinux : to create conatiner
+
+yum install git -y
+yum install maven -y
+touch file1
+
+ctrl p q
+
+docker images		: to list images
+docker start cont1	: to start cont1
+docker stop cont1	: to stop cont1
+docker kill cont1	: to stop immedieatly cont1
+docker ps 		: to see running containers
+docker ps -a		: to see all containers
+
+HISTORY:
+  1  yum install docker -y
+    2  docker version
+    3  systemctl start docker
+    4  systemctl status docker
+    5  docker version
+    6  docker images
+    7  docker search amazonlinux
+    8  docker pull amazonlinux
+    9  docker images
+   10  lsblk
+   11  cd
+   12  cd /
+   13  du -sh
+   14  docker run -it --name cont1 amazonlinux
+   15  docker ps
+   16  docker ps -a
+   17  docker stop cont1
+   18  docker ps
+   19  docker ps -a
+   20  docker start cont1
+   21  docker ps
+   22  docker kill cont1
+   23  history
