@@ -94,3 +94,182 @@ HISTORY:
    21  docker ps
    22  docker kill cont1
    23  history
+=============================================================================================
+
+OS LEVEL VIRTUALIZATION:
+
+NOTE: apt is package manager for ubuntu
+Redhat: Yum
+Ubuntu: Apt
+
+without running apt update -y we cant install packages
+
+WORKING:
+docker pull ubuntu
+docker run -it --name cont1 ubuntu
+apt update -y
+apt install git maven apache2 tree -y
+touch file{1..5}
+
+docker commit cont1 raham
+docker run -it --name cont2 raham
+
+check version now
+
+
+
+DOCKERFILE:
+its a way of creating images automatically.
+we can reuse the docker file for multiple times.
+in Dockerfile D will be Capital always.
+Components inside the Dockerfile also Capital.
+
+Dockerfile -- > Image -- > Container -- > 
+
+
+COMPONENTS:
+FROM		: to base image (gives os)
+RUN		: to execute linux commands (image creation)
+CMD		: to execute linux commands (container creation)
+ENTRYPOINT	: high priority than cmd
+COPY 		: to copy local files to conatainer
+ADD 		: to copy Intenet files to conatainer
+WORKDIR		: to go desired folder
+LABEL 		: to attach our tags/labels
+ENV		: variables which run inside conatiner (image)
+ARGS		: variables which run outside conatiner(containers)
+VOLUME		: used to create volume for conatiner
+EXPOSE		: used to give port number
+
+EX: -1
+
+FROM ubuntu
+RUN apt update -y
+RUN apt install git maven tree apache2 -y
+
+Build : docker build -t netflix:v1 .
+cont: docker run -it --name cont3 netflix:v1
+
+
+ex-2:
+FROM ubuntu
+RUN apt update -y
+RUN apt install git maven tree apache2 -y
+CMD apt install default-jre -y
+
+Build : docker build -t netflix:v2 .
+cont: docker run -it --name cont4 netflix:v2
+
+EX-3:
+
+FROM ubuntu
+RUN apt update -y
+RUN apt install git maven tree apache2 -y
+COPY index.html /tmp
+ADD https://dlcdn.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.tar.gz /tmp
+
+EX-4:
+
+FROM ubuntu
+RUN apt update -y
+RUN apt install git maven tree apache2 -y
+COPY index.html /tmp
+ADD https://dlcdn.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.tar.gz /tmp
+WORKDIR /tmp
+LABEL author rahamshaik
+
+
+docker inspect cont7 
+docker inspect cont7 | grep -i author
+
+
+EX-5:
+
+FROM ubuntu
+RUN apt update -y
+RUN apt install git maven tree apache2 -y
+COPY index.html /tmp
+ADD https://dlcdn.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.tar.gz /tmp
+WORKDIR /tmp
+LABEL author rahamshaik
+ENV name vijay
+ENV client swiggy
+
+run commands inside container
+echo $name
+echo $client
+
+
+EX-6:
+
+FROM ubuntu
+RUN apt update -y
+RUN apt install git maven tree apache2 -y
+COPY index.html /tmp
+ADD https://dlcdn.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.tar.gz /tmp
+WORKDIR /tmp
+LABEL author rahamshaik
+ENV name vijay
+ENV client swiggy
+VOLUME ["/volume1"]
+EXPOSE 8080
+
+COMMANDS:
+docker ps -a -q		: to list conatier ids
+docker stop $(docker ps -a -q) : to stop all conatiners
+docker rm $(docker ps -a -q) : to delete all conatiners
+
+docker images -q	: to print image ids
+docker rmi -f $(docker images -q) : to delete all images
+
+HISTORY: 1  yum install docker -y
+    2  service docker start
+    3  service docker status
+    4  docker pull ubuntu
+    5  docker images
+    6  docker run -it --name cont1 ubuntu
+    7  docker ps -a
+    8  docker attach cont1
+    9  docker images
+   10  docker ps -a
+   11  docker commit cont1 raham
+   12  docker images
+   13  docker run -it --name cont2 raham
+   14  vim Dockerfile
+   15  docker build -t netflix:v1 .
+   16  docker images
+   17  docker run -it --name cont3 netflix:v1
+   18  vim Dockerfile
+   19  docker build -t netflix:v2 .
+   20  docker run -it --name cont4 netflix:v2
+   21  docker ps -a
+   22  vim Dockerfile
+   23  docker build -t netflix:v3 .
+   24  ll
+   25  vim index.html
+   26  docker build -t netflix:v3 .
+   27  docker run -it --name cont5 netflix:v3
+   28  vim Dockerfile
+   29  docker build -t netflix:v3 .
+   30  docker run -it --name cont6 netflix:v1
+   31  docker run -it --name cont7 netflix:v3
+   32  docker inspect cont7
+   33  docker inspect cont7 | grep -i author
+   34  vim Dockerfile
+   35  docker build -t netflix:v3 .
+   36  docker run -it --name cont8 netflix:v3
+   37  vim Dockerfile
+   38  docker build -t netflix:v3 .
+   39  docker run -it --name cont9 netflix:v3
+   40  docker ps -a
+   41  vim Dockerfile
+   42  docker ps -a
+   43  docker ps -a -q
+   44  docker stop $(docker ps -a -q)
+   45  docker ps -a
+   46  docker rm $(docker ps -a -q)
+   47  docker ps -a
+   48  docker images
+   49  docker images -q
+   50  docker rmi -f $(docker images -q)
+   51  history
