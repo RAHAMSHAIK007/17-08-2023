@@ -528,3 +528,119 @@ docker-compose stop
 Supported filenames: docker-compose.yml, docker-compose.yaml, compose.yml, compose.yaml
 docker-compose -f raham.yml stop
 
+=================================
+
+DOCKER HUB:
+Its a central platfrom used to store docker images.
+image we create on host then we will push them to dockerhub.
+Once image is availabel on dockerhub we can use in any server.
+we use repos to store images.
+repo types: 1. public 2. private repo
+
+ACCOUNT:
+build a docker image with doker file.
+docker login: username and password
+
+docker tag image:v1 username/reponame
+docker push username/reponame
+
+
+
+DOCKER SWARM:
+
+High availability: deploying app on more than one server
+means using the cluster.
+
+docker swarm is a container orchestration tool.
+it is used to manage multiple containers on multiple nodes.
+each node will have a copy of single container.
+here we have manager and worker nodes.
+manager node will create containers and send to worker nodes.
+worker nodes will take the container and manage them.
+manager node communicates with worker node by using token.
+
+SETUP:
+1. create 3 servers (1=manager 2=worker) (all traffic is must)
+yum install docker -y
+systemctl start docker
+systemctl status docker
+
+2. set the hostnames:
+hostnamectl set-hostname manager/worker-1/worker-2
+
+3. generate and copy token:
+manager node: docker swarm init
+copy the token to all worker nodes
+
+SERVICES:
+its a way of exposing the application in docker.
+with services we can create multiple copies of same container.
+with services we can distribute the containers to all servers.
+
+docker service create --name movies --replicas=3 --publish 81:80 jayaprakashsairam05/movies:latest
+
+docker service ls		: to list services
+docker service ps train		: to list containers for train
+docker service inspect train	: to get complete info of train service
+docker service scale train=10	: to scale the services
+docker service scale train=6	: to scale the services
+docker service rollback train	: to go back to previous state
+docker service rm train		: to delete the train services
+
+SELF HEALING: automatically recreates container itself.
+
+CLUSTER LEVEL ACTIVITES:
+docker swarm leave(worker node)	: to down the woker node
+docker node rm id (manager node): to remove the node permenanetly
+docker swarm join-token manager : to regenerate the token
+
+
+Note: to join the node on cluster use the previous token
+we can delete running worker node directly
+we need to stop and then delete it
+
+
+HISTORY:
+   1  docker imgages
+    2  docker images
+    3  docker swarm init
+    4  docker node ls
+    5  docker run -itd --name cont1 jayaprakashsairam05/movies:latest
+    6  docker ps -a
+    7  docker kill cont1
+    8  docker rm cont1
+    9  docker service create --name movies --replicas=3 --publish 81:80 jayaprakashsairam05/movies:latest
+   10  docker ps -a
+   11  docker service create --name train --replicas=6 --publish 82:80 jayaprakashsairam05/train:latest
+   12  docker ps -a
+   13  docker service ls
+   14  docker ps -a
+   15  docker service ls
+   16  docker service ps train
+   17  docker service inspect train
+   18  docker service ls
+   19  docker service scale train=10
+   20  docker service ls
+   21  docker service ps train
+   22  docker service scale train=6
+   23  docker service rollback train
+   24  docker service rm train
+   25  docker service ls
+   26  docker ps -a
+   27  docker kill 3d6965f5a234
+   28  docker ps -a
+   29  docker kill 159af68bfd56
+   30  docker ps -a
+   31  docker node ls
+   32  docker node rm c2ldr2jfatw9p8s4uqzrf329h
+   33  docker node ls
+   34  docker node rm uhru8isgfco57di11azvbk2c9
+   35  docker node ls
+   36  docker node rm 3tm927qkvrt8sdr7sz7gprs7t
+   37  docker node ls
+   38  docker node rm 3tm927qkvrt8sdr7sz7gprs7t
+   39  docker node ls
+   40  docker swarm joint-token manager
+   41  docker swarm join-token manager
+   42  history
+[root@manager ~]#
