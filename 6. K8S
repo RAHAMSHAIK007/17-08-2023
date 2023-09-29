@@ -1,0 +1,159 @@
+DOCKER SWARM:
+CLUSTER 
+NODES
+CONTAINER
+APP
+
+C: CLUSTER
+N: NODE
+P: POD
+C: CONTAINER
+A: APPLICATION
+
+NOTE: k8s dont communicate with containers.
+it communicate with pods.
+
+COMPONENTS:
+MASTER NODE:
+1. API SERVER: its for communicating with cluster, it takes command executes and gives output.
+2. ETCD: its a DB od cluster, all the cluster info will store here.
+3. SCHEDULER: schedules pods on worker nodes, based on hardware resources.
+4. CONTROLLER: used to control the k8s objects.
+1. cloud controllers
+2. kube controllers
+
+WORKER NODE:
+KUBELET: its an agent used to communicate with master.
+KUBEPROXY: it deals with nlw.
+POD: its a group of containers.
+
+There are multiple ways to setup kubernetes cluster.
+
+1.SELF MANAGER K8'S CLUSTER
+a.mini kube (single node cluster)
+b.kubeadm(multi node cluster)
+c. KOPS
+
+2. CLOUD MANAGED K8'S CLUSTER
+a. AWS EKS
+b.AZURE AKS
+c.GCP GKS
+d.IBM IKE
+
+MINIKUBE:
+It is a tool used to setup single node cluster on K8's. 
+It contains API Servers, ETDC database and container runtime
+It is used for development, testing, and experimentation purposes on local. 
+Here Master and worker runs on same machine.
+It is a platform Independent.
+
+NOTE: But we dont implement this in real-time
+
+REQUIRMENTS:
+2 CPUs or more
+2GB of free memory
+20GB of free disk space
+Internet connection
+Container or virtual machine manager, such as: Docker.
+
+SETUP:
+sudo apt update -y
+sudo apt upgrade -y
+sudo apt install curl wget apt-transport-https -y
+sudo curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo mv minikube-linux-amd64 /usr/local/bin/minikube
+sudo chmod +x /usr/local/bin/minikube
+sudo minikube version
+sudo curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+sudo echo "$(cat kubectl.sha256) kubectl" | sha256sum --check
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+sudo minikube start --driver=docker --force
+
+PODS:
+It is a smallest unit of deployment in K8's.
+It is a group of containers.
+Pods are ephemeral (short living objects)
+Mostly we can use single container inside a pod but if we required, we can create multiple containers inside a same pod.
+when we create a pod, containers inside pods can share the same network namespace, and can share the same storage volumes .
+While creating pod, we must specify the image, along with any necessary configuration and resource limits.
+K8's cannot communicate with containers, they can communicate with only pods.
+ We can create this pod in two ways, 
+1. Imperative(command) 
+2. Declarative (Manifest file)
+
+
+IMPERATIVE: 
+kubectl run pod1 --image rahamshaik/paytmtrain:latest
+kubectl get po/pod/pods
+kubectl get po/pod/pods -o wide
+kubectl describe pod pod1
+kubectl delete pod pod1
+
+Declarative:
+vim abc.yml
+
+apiVersion: v1
+kind: Pod
+metadata:
+   name: pod1
+spec:
+  containers:
+    - image: nginx
+      name: cont1
+
+kubectl create -f abc.yml
+kubectl get po/pod/pods
+kubectl get po/pod/pods -o wide
+kubectl describe pod pod1
+kubectl delete pod pod1
+
+HISTORY:
+  1  apt update -y
+    2  apt upgrade -y
+    3  sudo apt install curl wget apt-transport-https -y
+    4  sudo curl -fsSL https://get.docker.com -o get-docker.sh
+    5  ll
+    6  sh get-docker.sh
+    7  sudo curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    8  ll
+    9  sudo mv minikube-linux-amd64 /usr/local/bin/minikube
+   10  chmod +x /usr/local/bin/minikube
+   11  minikube version
+   12  sudo curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux                                                                                                                                                           /amd64/kubectl"
+   13  ll
+   14  sudo curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/k                                                                                                                                                           ubectl.sha256"
+   15  echo "$(cat kubectl.sha256) kubectl" | sha256sum --check
+   16  sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+   17  kubectl version
+   18  kubectl version --client
+   19  minikube start --driver=docker --force
+   20  minikube status
+   21  kubectl get pod
+   22  kubectl get pods
+   23  kubectl get po
+   24  kubectl run pod1 --image rahamshaik/paytmtrain:latest
+   25  kubectl get pod
+   26  kubectl get pods
+   27  kubectl get po
+   28  kubectl describe pod pod1
+   29  kubectl get po
+   30  kubectl delete pod pod1
+   31  kubectl get po
+   32  kubectl run pod1 --image ubuntu
+   33  kubectl get po
+   34  kubectl delete pod pod1
+   35  kubectl run raham --image nginx
+   36  kubectl get po
+   37  kubectl describe pod raham
+   38  kubectl get po -o wide
+   39  kubectl delete pod raham
+   40  vim abc.yml
+   41  kubectl create -f abc.yml
+   42  kubectl get po
+   43  kubectl get po -o wide
+   44  kubectl describe pod pod1
+   45  kubectl delete pod pod1
+   46  history
