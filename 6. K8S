@@ -27,6 +27,270 @@ KUBELET: its an agent used to communicate with master.
 KUBEPROXY: it deals with nlw.
 POD: its a group of containers.
 
+
+There are multiple ways to setup kubernetes cluster.
+
+1.SELF MANAGER K8'S CLUSTER
+a.mini kube (single node cluster)
+b.kubeadm(multi node cluster)
+c. KOPS
+
+2. CLOUD MANAGED K8'S CLUSTER
+a. AWS EKS
+b.AZURE AKS
+c.GCP GKS
+d.IBM IKE
+
+MINIKUBE:
+It is a tool used to setup single node cluster on K8's. 
+It contains API Servers, ETDC database and container runtime
+It is used for development, testing, and experimentation purposes on local. 
+Here Master and worker runs on same machine.
+It is a platform Independent.
+
+NOTE: But we dont implement this in real-time
+
+REQUIRMENTS:
+2 CPUs or more
+2GB of free memory
+20GB of free disk space
+Internet connection
+Container or virtual machine manager, such as: Docker.
+
+
+
+PODS:
+It is a smallest unit of deployment in K8's.
+It is a group of containers.
+Pods are ephemeral (short living objects)
+Mostly we can use single container inside a pod but if we required, we can create multiple containers inside a same pod.
+when we create a pod, containers inside pods can share the same network namespace, and can share the same storage volumes .
+While creating pod, we must specify the image, along with any necessary configuration and resource limits.
+K8's cannot communicate with containers, they can communicate with only pods.
+ We can create this pod in two ways, 
+1. Imperative(command) 
+2. Declarative (Manifest file)
+
+
+IMPERATIVE: 
+kubectl run pod1 --image rahamshaik/paytmtrain:latest
+kubectl get po/pod/pods
+kubectl get po/pod/pods -o wide
+kubectl describe pod pod1
+kubectl delete pod pod1
+
+Declarative:
+vim abc.yml
+
+apiVersion: v1
+kind: Pod
+metadata:
+   name: pod1
+spec:
+  containers:
+    - image: nginx
+      name: cont1
+
+kubectl create -f abc.yml
+kubectl get po/pod/pods
+kubectl get po/pod/pods -o wide
+kubectl describe pod pod1
+kubectl delete pod pod1
+
+DRAWBACK:
+if we delete the pod we cant retrive.
+all the load will be handled by single pod.
+
+
+REPLICA SET:
+it will create same pod of multiple replicas.
+if we delete one pod it will create automatically.
+we can distribute the load also.
+
+
+LABLE: assing to a pod for identification. to work with them as single unit.
+SELECTOR: used to identify the pod with same label.
+
+kubectl api-resources
+
+REPLICASET:
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  labels:
+    app: swiggy
+  name: swiggy-rs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: swiggy
+  template:
+    metadata:
+      labels:
+        app: swiggy
+    spec:
+      containers:
+      - name: cont1
+        image: nginx
+
+kubectl create -f abc.yml
+
+kubectl get rs
+kubectl get rs -o wide
+kubectl describe rs swiggy-rs
+kubectl delete rs swiggy-rs
+kubectl edit rs/swiggy-rs
+
+
+
+SCALING: 
+
+SCALE-IN: Increasing the count of pods
+kubectl scale rs/swiggy-rs --replicas=10
+
+SCALE-OUT: Decreasing the count of pods
+kubectl scale rs/swiggy-rs --replicas=5
+
+SCALING FOLLOWS LIFO PATTERN:
+LIFO: LAST IN FIRST OUT
+the pod which is created will be deleted first automatically when we scale out.
+
+
+DEPLOYMENT:
+it will do all operations link RS.
+it will do roll back which cannot be done in rs.
+
+rs -- > pods
+deployment -- > rs -- > pods
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: swiggy
+  name: swiggy-rs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: swiggy
+  template:
+    metadata:
+      labels:
+        app: swiggy
+    spec:
+      containers:
+      - name: cont1
+        image: nginx
+
+kubectl get deploy
+kubectl get deploy -o wide
+kubectl describe deploy swiggy-rs
+kubectl edit deploy/swiggy-rs
+kubectl delete deploy swiggy-r
+kubectl delete po --all
+
+
+KUBECOLOR:
+
+wget https://github.com/hidetatz/kubecolor/releases/download/v0.0.25/kubecolor_0.0.25_Linux_x86_64.tar.gz
+tar -zxvf kubecolor_0.0.25_Linux_x86_64.tar.gz
+./kubecolor
+chmod +x kubecolor
+mv kubecolor /usr/local/bin/
+kubecolor get po
+
+HISTORY:
+1  vim minikube.sh
+    2  sh minikube.sh
+    3  vim abc.yml
+    4  kubectl create -f abc.yml
+    5  vim abc.yml
+    6  kubectl create -f abc.yml
+    7  kubectl get po
+    8  kubectl delete pod raham
+    9  kubectl get po
+   10  vim abc.yml
+   11  kubectl get po
+   12  kubectl create -f abc.yml
+   13  cat abc.yml
+   14  vim abc.yml
+   15  kubectl create -f abc.yml
+   16  kubectl get rs
+   17  kubectl ap-resources
+   18  kubectl api-resources
+   19  kubectl get rs -o wide
+   20  kubectl describe rs train-rs
+   21  kubectl get po
+   22  kubectl get rs -o wide
+   23  kubectl delete pod train-rs-gshzk
+   24  kubectl get po
+   25  kubectl delete pod train-rs-767lv
+   26  kubectl get po
+   27  kubectl scale rs/train-rs --replicas=10
+   28  kubectl get po
+   29  kubectl scale rs/train-rs --replicas=5
+   30  kubectl get po
+   31  kubectl describe rs tarin-rs
+   32  kubectl describe rs train-rs
+   33  kubectl edit rs/train-rs
+   34  kubectl describe rs train-rs
+   35  kubectl get po
+   36  kubectl describe pod train-rs-24xvk | grep -i image
+   37  kubectl describe pod train-rs-24xvk
+   38  kubectl describe rs train-rs
+   39  kubectl describe pod
+   40  kubectl get po
+   41  kubectl describe pod train-rs-24xvk
+   42  kubectl describe pod train-rs-gq9bb
+   43  kubectl describe pod train-rs-m6gv5
+   44  kubectl get po
+   45  kubectl run pod1 --image nginx
+   46  kubectl run pod2 --image nginx
+   47  kubectl run pod3 --image nginx
+   48  kubectl get po
+   49  kubectl delete pod -l app=train
+   50  kubectl delete rs train-rs
+   51  kubectl get po
+   52  kubectl get po -o wide
+   53  kubectl delete po --all
+   54  vim abc.yml
+   55  kubectl create -f abc.yml
+   56  kubectl get deploy
+   57  kubectl get rs
+   58  kubectl get po
+   59  kubectl describe deploy train-rs
+   60  kubectl edit deploy/train-rs
+   61  kubectl get po
+   62  kubectl describe deploy train-rs
+   63  kubectl describe po
+   64  kubectl edit deploy/train-rs
+   65  kubectl get po
+   66  kubectl describe po
+   67  kubectl describe po | grep -i Image
+   68  kubectl scale deploy/train-rs --replicas=10
+   69  kubectl get po
+   70  wget https://github.com/hidetatz/kubecolor/releases/download/v0.0.25/kubecolor_0.0.25_Linux_x86_64.tar.gz
+   71  tar -zxvf kubecolor_0.0.25_Linux_x86_64.tar.gz
+   72  ./kubecolor
+   73  chmod +x kubecolor
+   74  mv kubecolor /usr/local/bin/
+   75  kubecolor get po
+   76  kubectl get rs
+   77  kubecolor get rs
+   78  kubecolor get po
+   79  history
+   80  kubecolor describe deploy train-rs
+   81  kubecolor get po
+   82  kubecolor logs train-rs-6cddf5c876-6ws5z
+   83  kubecolor logs ttrain-rs-6cddf5c876-wh6mr
+   84  kubecolor logs train-rs-6cddf5c876-wh6mr
+   85  kubecolor logs train-rs-6cddf5c876-wh6mr -c cont1
+   86  history
+root@ip-172-31-10-159:~#
+
 There are multiple ways to setup kubernetes cluster.
 
 1.SELF MANAGER K8'S CLUSTER
