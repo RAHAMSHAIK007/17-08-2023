@@ -538,3 +538,244 @@ HISTORY:
    41  kops get cluster
    42  kops delete cluster --name rahams.k8s.local --yes
    43  history
+
+==================================================================================================================
+
+NAMESPACES:
+
+NAMESPACE: It is used to divide the cluster to multiple teams on real time.
+it is used to isolate the env.
+
+CLUSTER: HOUSE
+NAMESPACES: ROOM
+
+Each namespace is isolated.
+if your are room-1 are you able to see room-2.
+we cant access the objects from one namespace to another namespace.
+
+
+TYPES:
+
+default           : Is the default namespace, all objects will create here only
+kube-node-lease   : it will store object which is taken from one namespace to another.
+kube-public	  : all the public objects will store here.      
+kube-system 	  : default k8s will create some objects, those are storing on this ns.
+
+kubectl get pod -n kube-system	: to list all pods in kube-system namespace
+kubectl get pod -n default	: to list all pods in default namespace
+kubectl get pod -n kube-public	: to list all pods in kube-public namespace
+kubectl get po -A		: to list all pods in all namespaces
+
+kubectl create ns dev	: to create namespace
+kubectl config set-context --current --namespace=dev : to switch to the namespace
+kubectl config view --minify | grep namespace : to see current namespace
+kubectl delete ns dev	: to delete namespace
+kubectl delete pod --all: to delete all pods
+
+
+NOTE: By deleting  the ns all objects also gets deleted.
+in real time we use rbac concept to restrict the access from one namespace to another.
+so users cant access/delete ns, because of the restriction we provide.
+we create roles and rolebind for the users.
+
+
+SERVICE: It is used to expose the application in k8s.
+
+TYPES:
+1. CLUSTERIP: It will work inside the cluster.
+it will not expose to outer world.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: swiggy
+  name: swiggy-deploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: swiggy
+  template:
+    metadata:
+      labels:
+        app: swiggy
+    spec:
+      containers:
+      - name: cont1
+        image: rahamshaik/moviespaytm:latest
+        ports:
+          - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sv1
+spec:
+  type: ClusterIP
+  selector:
+    app: swiggy
+  ports:
+    - port: 80
+
+DRAWBACK:
+We cannot use app outside.
+
+2. NODEPORT: It will expose our application in a particular port.
+Range: 30000 - 32767 (in sg we need to give all traffic)
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: swiggy
+  name: swiggy-deploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: swiggy
+  template:
+    metadata:
+      labels:
+        app: swiggy
+    spec:
+      containers:
+      - name: cont1
+        image: rahamshaik/trainservice:latest
+        ports:
+          - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: abc
+spec:
+  type: NodePort
+  selector:
+    app: swiggy
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 31111
+
+NOTE: UPDATE THE SG (REMOVE OLD TRAFFIC AND GIVE ALL TRAFFIC & SSH)
+DRAWBACK:
+PORT RESTRICTION.
+
+3. LOADBALACER: It will expose our app and distribute load blw pods.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: swiggy
+  name: swiggy-deploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: swiggy
+  template:
+    metadata:
+      labels:
+        app: swiggy
+    spec:
+      containers:
+      - name: cont1
+        image: rahamshaik/trainservice:latest
+        ports:
+          - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: abc
+spec:
+  type: LoadBalancer
+  selector:
+    app: swiggy
+  ports:
+    - port: 80
+      targetPort: 80
+
+
+
+HISTORY:
+
+ 1  vim kops.sh
+    2  vim .bashrc
+    3  source .bashrc
+    4  sh kops.sh
+    5  vim kops.sh
+    6  sh kops.sh
+    7  kops validate cluster --wait 10m
+    8  cat kops.sh
+    9  export KOPS_STATE_STORE=s3://devopsbynraeshit887766.k8s.local
+   10  kops validate cluster --wait 10m
+   11  kubectl get ns
+   12  kubectl run pod1 --image nginx
+   13  kubectl describe pod pod1
+   14  kubectl get po
+   15  kubectl get ns
+   16  kubectl get po -n kube-node-lease
+   17  kubectl get po -n kube-public
+   18  kubectl get po -n kube-system
+   19  kubectl get po --all
+   20  kubectl get po -A
+   21  kubectl create ns dev
+   22  kubectl get ns
+   23  kubectl config set-context --current --namspace=dev
+   24  kubectl config set-context --current --namespace=dev
+   25  kubectl run devpod1 --image nginx
+   26  kubectl run devpod2 --image nginx
+   27  kubectl run devpod3 --image nginx
+   28  kubectl get po
+   29  kubectl view config
+   30  kubectl config view
+   31  kubectl config view --minfy
+   32  kubectl config view --minify
+   33  kubectl get po
+   34  kubectl get po -A
+   35  kubectl create ns test
+   36  kubectl config set-context --curent --namespace=test
+   37  kubectl config set-context --current --namespace=test
+   38  kubectl run testpod1 --image nginx
+   39  kubectl run testpod2 --image nginx
+   40  kubectl run testpod3 --image nginx
+   41  kubectl get po
+   42  kubectl get po -n dev
+   43  kubectl delete po devpod1 -n dev
+   44  kubectl get po -n dev
+   45  kubectl delete ns dev
+   46  kubectl delete ns test
+   47  vim abc.yml
+   48  kubectl api-resources
+   49  vim abc.yml
+   50  kubectl get svc
+   51  kubectl get svc -A
+   52  kubectl create -f abc.yml
+   53  kubectl config set-context --current --namespace=default
+   54  kubectl create -f abc.yml
+   55  kubectl get deploy,svc
+   56  kubectl delete -f abc.yml
+   57  vim abc.yml
+   58  kubectl create -f abc.yml
+   59  vim abc.yml
+   60  kubectl create -f abc.yml
+   61  kubectl get deploy
+   62  kubectl delete deploy swiggy-deploy
+   63  kubectl create -f abc.yml
+   64  kubectl delete -f abc.yml
+   65  kubectl create -f abc.yml
+   66  kubectl get deploy,svc
+   67  vim abc.yml
+   68  kubectl apply -f abc.yml
+   69  kubectl delete -f abc.yml
+   70  vim abc.yml
+   71  kubectl create -f abc.yml
+   72  kubectl get deploy,svc
+   73  kops get cluster
+   74  kops delete cluster --name rahams.k8s.local --yes
+   75  history
+[root@ip-172-31-45-202 ~]#
