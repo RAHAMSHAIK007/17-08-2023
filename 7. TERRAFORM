@@ -167,3 +167,198 @@ history:
    37  terraform destroy --auto-approve
    38  history
 
+=========================================
+VARIABLES, OUTPUTS AND IMPORT
+
+TERRAFORM VAR FILES:
+these files used to store variables seperately on terraform.
+
+
+
+cat main.tf
+provider "aws" {
+region = "us-east-1"
+}
+
+resource "aws_instance" "one" {
+count = var.instance_count
+ami = "ami-03eb6185d756497f8"
+instance_type = var.instance_type
+tags = {
+Name = "raham-server"
+}
+}
+
+cat variable.tf
+variable "instance_count" {
+description = "*"
+type = number
+default = 3
+}
+
+variable "instance_type" {
+description = "*"
+type = string
+default = "t2.micro"
+}
+
+terraform apply --auto-approve 
+terraform destroy --auto-approve
+
+
+cat main.tf
+provider "aws" {
+region = "ap-south-1"
+}
+
+resource "aws_instance" "one" {
+count = var.instance_count
+ami = "ami-0b41f7055516b991a"
+instance_type = var.instance_type
+tags = {
+Name = "raham-server"
+}
+}
+
+cat variable.tf
+variable "instance_count" {
+}
+
+variable "instance_type" {
+}
+
+cat dev.tfvars
+instance_count = 1
+
+instance_type = "t2.micro"
+
+cat test.tfvars
+instance_count = 2
+
+instance_type = "t2.medium"
+
+terraform apply --auto-approve -var-file="dev.tfvars"
+terraform destroy --auto-approve -var-file="dev.tfvars"
+
+
+terraform apply --auto-approve -var-file="test.tfvars"
+terraform destroy --auto-approve -var-file="test.tfvars"
+
+
+TERRAFORM CLI:
+we can pass inputs for terraform from cli.
+
+provider "aws" {
+region = "ap-south-1"
+}
+
+resource "aws_instance" "one" {
+ami = "ami-0b41f7055516b991a"
+instance_type = var.instance_type
+tags = {
+Name = "raham-server"
+}
+}
+
+variable "instance_type" {
+}
+
+terraform apply --auto-approve -var="instance_type=t2.medium"
+terraform destroy --auto-approve -var="instance_type=t2.medium"
+
+TERRAFORM OUTPUTS: used to print the resource properties.
+ex: public-ip, dns, instance type
+
+provider "aws" {
+region = "ap-south-1"
+}
+
+resource "aws_instance" "one" {
+ami = "ami-0b41f7055516b991a"
+instance_type = "t2.medium"
+tags = {
+Name = "raham-server"
+}
+}
+
+output "raham" {
+value = [aws_instance.one.public_ip, aws_instance.one.private_ip, aws_instance.one.public_dns, aws_instance.one.private_dns]
+}
+
+
+TERRAFORM IMPORT: used to import and track the resources which is created manually.
+
+
+cat main.tf
+provider "aws" {
+region = "ap-south-1"
+}
+
+resource "aws_instance" "one" {
+}
+
+terraform import aws_instance.one i-0f4c0d5d3bb6dc758
+
+  1  sudo yum install -y yum-utils shadow-utils
+    2  sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+    3  sudo yum -y install terraform
+    4  aws configure
+    5  mkdir terraform
+    6  cd terraform/
+    7  vim main.tf
+    8  vim variable.tf
+    9  cat main.tf
+   10  cat variable.tf
+   11  terraform init
+   12  terraform plan
+   13  cd
+   14  ls -al
+   15  ll .aws/
+   16  vim .aws/credentials
+   17  cd terraform/
+   18  terraform plan
+   19  vim main.tf
+   20  terraform plan
+   21  vim main.tf
+   22  terraform plan
+   23  terraform apply --aut-approve
+   24  terraform apply --auto-approve
+   25  vim main.tf
+   26  terraform apply --auto-approve
+   27  terraform destroy --auto-approve
+   28  vim variable.tf
+   29  vim dev.tfvars
+   30  vim test.tfvars
+   31  cat main.tf
+   32  cat variable.tf
+   33  cat dev.tfvars
+   34  cat test.tfvars
+   35  terraform apply --auto-approve -var-file="dev.tfvars"
+   36  terraform apply --auto-approve -var-file="test.tfvars"
+   37  terraform destroy --auto-approve -var-file="test.tfvars"
+   38  vim dev.tfvars
+   39  terraform apply --auto-approve
+   40  terraform apply --auto-approve -var-file="dev.tfvars"
+   41  terraform destroy --auto-approve -var-file="dev.tfvars"
+   42  rm -rf dev.tfvars test.tfvars variable.tf
+   43  vim main.tf
+   44  ll
+   45  terraform apply --auto-approve
+   46  terraform destroy --auto-approve
+   47  terraform apply --auto-approve -var="instance_type=t2.medium"
+   48  terraform destroy --auto-approve -var="instance_type=t2.medium"
+   49  vim main.tf
+   50  terraform apply --auto-approve
+   51  vim main.tf
+   52  terraform apply
+   53  vim main.tf
+   54  terraform apply --auto-approve
+   55  terraform destroy --auto-approve
+   56  vim main.tf
+   57  cat terraform.tfstate
+   58  vim main.tf
+   59  cat main.tf
+   60  terraform import aws_instance.one i-0f4c0d5d3bb6dc758
+   61  cat terraform.tfstate
+   62  terraform import --help
+   63  terraform import -h
