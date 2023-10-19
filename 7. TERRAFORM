@@ -362,3 +362,198 @@ terraform import aws_instance.one i-0f4c0d5d3bb6dc758
    61  cat terraform.tfstate
    62  terraform import --help
    63  terraform import -h
+
+===================================================
+
+
+provider "aws" {
+region = "us-east-1"
+}
+
+resource "aws_s3_bucket" "one" {
+bucket = "rahamshaik9988tetrrbcuket"
+}
+
+resource "aws_ebs_volume" "two" {
+size = 20
+availability_zone = "us-east-1b"
+tags = {
+Name = "raham-ebs"
+}
+}
+
+resource "aws_iam_user" "three" {
+name = "rahams"
+}
+
+resource "aws_instance" "four" {
+ami = "ami-03eb6185d756497f8"
+instance_type = "t2.micro"
+tags = {
+Name = "Raham-terraserver"
+}
+}
+
+Terraform taint: used to recreate specific objects 
+in real time some resource we need to recrete if it will not work properly 
+then we can use taint concetp
+
+terraform taint aws_instance.four
+terraform apply --auto-approve
+
+Terraform Lifecycle:
+
+Prevent_destroy: used to keep secure our resources without destroying.
+
+provider "aws" {
+region = "us-east-1"
+}
+
+resource "aws_s3_bucket" "one" {
+bucket = "rahamshaik9988tetrrbcuket"
+}
+
+resource "aws_ebs_volume" "two" {
+size = 20
+availability_zone = "us-east-1b"
+tags = {
+Name = "raham-ebs"
+}
+}
+
+resource "aws_iam_user" "three" {
+name = "rahams"
+}
+
+resource "aws_instance" "four" {
+ami = "ami-03eb6185d756497f8"
+instance_type = "t2.micro"
+tags = {
+Name = "Raham-terraserver"
+}
+lifecycle {
+prevent_destroy = true
+}
+
+TERRAFORM FMT: used to provide the indentation for terraform.
+
+VERSION CONSTARINT: used to change the provider version.
+
+provider "aws" {
+  region = "us-east-1"
+}
+
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = ">5.19.0"
+    }
+  }
+}
+
+terraform init -upgrade
+
+Local resources:
+
+provider "aws" {
+  region = "us-east-1"
+}
+
+resource "local_file" "one" {
+filename = "abc.txt"
+content= "Hai all this file is created by terraform"
+}
+
+
+provider "aws" {
+  region = "us-east-1"
+}
+
+terraform {
+  required_providers {
+    local = {
+      source = "hashicorp/local"
+      version = "2.2.0"
+    }
+  }
+}
+
+HISTORY:
+    1  sudo yum install -y yum-utils shadow-utils
+    2  sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+    3  sudo yum -y install terraform
+    4  aws configure
+    5  mkdir terraform
+    6  cd terraform/
+    7  vim main.tf
+    8  terraform init
+    9  terraform plan
+   10  vim main.tf
+   11  terraform plan
+   12  terraform apply --auto-approve
+   13  vim main.tf
+   14  terraform apply --auto-approve
+   15  cat main.tf
+   16  vim main.tf
+   17  terraform apply --auto-approve
+   18  terraform state list
+   19  cat main.tf
+   20  terraform taint aws_instance.four
+   21  terraform apply --auto-approve
+   22  terraform state list
+   23  terraform taint aws_instance.four aws_ebs_volume.two
+   24  terraform taint aws_instance.four
+   25  terraform taint aws_ebs_volume.two
+   26  terraform apply --auto-approve
+   27  vim main.tf
+   28  terraform destroy --auto-approve
+   29  vim main.tf
+   30  terraform destroy --auto-approve
+   31  terraform plan
+   32  terraform destroy --auto-approve
+   33  terraform state list
+   34  vim main.tf
+   35  terraform destroy --auto-approve
+   36  vim main.tf
+   37  terraform destroy --auto-approve
+   38  cat main.tf
+   39  vim main.tf
+   40  terraform destroy --auto-approve
+   41  terraform apply --auto-approve
+   42  terraform destroy --auto-approve
+   43  terraform init
+   44  vim main.tf
+   45  cat main.tf
+   46  terraform fmt
+   47  cat main.tf
+   48  vim main.tf
+   49  terraform init -upgrade
+   50  vim main.tf
+   51  terraform init -upgrade
+   52  vim main.tf
+   53  terraform init -upgrade
+   54  cat main.tf
+   55  vim main.tf
+   56  terraform apply --auto-approve
+   57  terraform init -upgrade
+   58  terraform apply --auto-approve
+   59  ll /root/
+   60  ll
+   61  cd
+   62  ll
+   63  cd terraform/
+   64  ll
+   65  cat abc.txt
+   66  cat main.tf
+   67  vim main.tf
+   68  terraform init -upgrade
+   69  vim main.tf
+   70  terraform init -upgrade
+   71  cat main.tf
+   72  history
+
+
+
+
+
