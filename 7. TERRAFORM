@@ -745,3 +745,231 @@ HISTORY:
    60  terraform apply --auto-approve
    61  cat main.tf
    62  history
+=====================================================
+
+provider "aws" {
+region = "ap-south-1"
+}
+
+resource "aws_instance" "one" {
+ami = "ami-06006e8b065b5bd46"
+instance_type = "t2.micro"
+tags = {
+Name = "raham"
+}
+lifecycle {
+prevent_destroy = true
+}
+}
+
+
+provider "aws" {
+region = "ap-south-1"
+}
+
+resource "aws_instance" "one" {
+ami = "ami-06006e8b065b5bd46"
+instance_type = "t2.micro"
+tags = {
+Name = "raham"
+}
+lifecycle {
+prevent_destroy = false
+}
+}
+
+Prevent Destroy: it will not delete the resources
+Ignore changes: it will not replicate the changes we have done to server
+Depends on: it will depend on another resource to create.
+
+tERRAFORM REMOTE BACKEND SETUP:
+when we create infra the information of resources will store on state file.
+so it will be tracking the infra information.
+so we need to take backup of that file.
+if we lost that file we cant track the infra.
+so we prefer to locate the state file on remote loaction.
+here im using s3 as remote backend.
+
+
+provider "aws" {
+region = "ap-south-1"
+}
+
+terraform {
+  backend "s3" {
+    bucket = "rahamshaikterraprodbcuket0088"
+    key    = "prod/terraform.tfstate"
+    region = "ap-south-1"
+  }
+}
+
+resource "aws_instance" "one" {
+ami = "ami-06006e8b065b5bd46"
+instance_type = "t2.micro"
+tags = {
+Name = "raham"
+}
+}
+
+create Bucket manually
+
+Note: while using new block always we need to run terraform init
+otherwise, plugins will not be downloaded
+
+after removing backend setup run this command:
+terraform init -migrate-state
+
+
+TERRAFORM REFRESH: used to refresh and replicate the changes to state file.
+it will compare terraform state file with resource.
+if it is exsits it will show, otherwise it will not show.
+
+LOCAL RESOURCES:
+
+
+provider "aws" {
+region = "ap-south-1"
+}
+
+resource "local_file" "one" {
+filename = "abc.txt"
+content = "hai all this file is creatd from terraform"
+}
+
+VERSION CONSTRAINTS:
+it is used to change the provider version plugins.
+can be applicable for all providers.
+
+
+provider "aws" {
+region = "ap-south-1"
+}
+
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "<5.22.0"
+    }
+  }
+}
+
+
+provider "aws" {
+region = "ap-south-1"
+}
+
+terraform {
+  required_providers {
+    local = {
+      source = "hashicorp/local"
+      version = "<2.2.0"
+    }
+  }
+}
+
+
+
+DYNAMIC BLOCK: it is used to reduce the length of code and used for reusabilty of code in loop.
+
+provider "aws" {
+}
+
+locals {
+  ingress_rules = [{
+    port        = 443
+    description = "Ingress rules for port 443"
+    },
+    {
+      port        = 80
+      description = "Ingree rules for port 80"
+  },
+  {
+      port        = 8080
+      description = "Ingree rules for port 8080"
+
+  }]
+}
+
+resource "aws_instance" "ec2_example" {
+  ami                    = "ami-0c02fb55956c7d316"
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.main.id]
+  tags = {
+    Name = "Terraform EC2"
+  }
+}
+
+resource "aws_security_group" "main" {
+
+  egress = [
+    {
+      cidr_blocks      = ["0.0.0.0/0"]
+      description      = "*"
+      from_port        = 0
+      ipv6_cidr_blocks = []
+      prefix_list_ids  = []
+      protocol         = "-1"
+      security_groups  = []
+      self             = false
+      to_port          = 0
+  }]
+
+  dynamic "ingress" {
+    for_each = local.ingress_rules
+
+    content {
+      description = "*"
+      from_port   = ingress.value.port
+      to_port     = ingress.value.port
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+
+  tags = {
+    Name = "terra sg"
+  }
+}
+
+
+
+provider "aws" {
+region = "ap-south-1"
+}
+
+resource "aws_instance" "one" {
+count = length(var.instance_type)
+ami = "ami-06006e8b065b5bd46"
+instance_type = var.instance_type[count.index]
+tags = {
+Name = var.instance_name[count.index]
+}
+}
+
+variable "instance_type" {
+default = ["t2.medium", "t2.micro", "t2.nano"]
+}
+
+variable "instance_name" {
+default = ["webserver", "appserver", "dbserver"]
+}
+
+
+FOR_EACH:
+
+provider "aws" {
+}
+
+resource "aws_instance" "two" {
+for_each = toset(["web-server", "app-server", "db-server"])
+ami = "ami-04beabd6a4fb6ab6f"
+instance_type = "t2.micro"
+tags = {
+Name = "${each.key}"
+}
+}
+
+
+
+
